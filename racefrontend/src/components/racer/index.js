@@ -49,7 +49,7 @@ export const Racer = () => {
       const chatPage = document.getElementById("race-page");
       chatPage.classList.remove("hide");
 
-      const socket = new WebSocket("ws://localhost:8081/race-websocket");
+      const socket = new WebSocket("ws://localhost:8080/race-websocket");
 
       global.stompClient = Stomp.over(socket);
 
@@ -133,6 +133,8 @@ export const Racer = () => {
           sendDirection(e, "DOWN");
           setTimeout(500);
             break;
+        default:
+          break;
     }
   });
 

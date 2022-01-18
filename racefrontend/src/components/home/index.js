@@ -10,8 +10,8 @@ export const Home = () => {
     history.push("/")
   }
 
-  const game = () => {
-    history.push("/racer")
+  const lobby = () => {
+    history.push("/lobby")
   }
 
     return (
@@ -19,7 +19,7 @@ export const Home = () => {
         <nav>
           <h2>Welcome</h2> 
           <button onClick = {logout}>Log Out</button>
-          <button onClick = {game}>RaceGame</button>
+          <button onClick = {lobby}>Lobby</button>
         </nav>
       </div>
     );
