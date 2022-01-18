@@ -1,7 +1,9 @@
 import Stomp from "stompjs";
+import { useLocation } from "react-router-dom";
 import "./styles.scss";
 
-export const Racer = () => {
+export const Racer = props => {
+  const location = useLocation();
   let circle1;
   let circle2;
 
@@ -11,7 +13,7 @@ export const Racer = () => {
   let ypos1 = 0;
   let ypos2 = 0;
 
-  let gameId;
+  let gameId = location.state.detail;
 
   const setCords = (x1, x2, y1, y2) =>
   {
@@ -19,11 +21,6 @@ export const Racer = () => {
     xpos2 = x2;
     ypos1 = y1;
     ypos2 = y2;
-  }
-
-  const setGameId = (id) =>
-  {
-    gameId = id;
   }
     
   const parseJwt = (token) => {
@@ -38,6 +35,7 @@ export const Racer = () => {
   const connect = (e) => {
     e.preventDefault();
 
+    console.log(gameId)
     let token = localStorage.getItem("jwtToken");
     let parsedToken = parseJwt(token);
     global.username = parsedToken.sub;
@@ -58,11 +56,11 @@ export const Racer = () => {
   };
 
   const onConnected = () => {
-    global.stompClient.subscribe("/topic/temp", onMessageReceived);
+    global.stompClient.subscribe("/topic/race", onMessageReceived);
     global.stompClient.send(
-      "/app/race.joinLobby",
+      "/app/race.newUser",
       {},
-      JSON.stringify({ sender: global.username, type: "CONNECT" })
+      JSON.stringify({ sender: global.username, type: "CONNECT", content: gameId })
     );
     const status = document.getElementById("status");
     status.className = "hide";
@@ -170,6 +168,7 @@ export const Racer = () => {
       message.content = message.sender + " left!";
     }
       else if (message.type === "TRACK") {
+        if(gameId === message.gameId)
         console.log("message.content: ", message.content);
         setCords(message.content[0].xpos, message.content[1].xpos, message.content[0].ypos, message.content[1].ypos)
         moveCar();

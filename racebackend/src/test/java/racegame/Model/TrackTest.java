@@ -14,8 +14,8 @@ public class TrackTest
     void setUp()
     {
         track = new Track();
-        track.Newuser("user1");
-        track.Newuser("user2");
+        track.Newuser("user1", 1);
+        track.Newuser("user2", 1);
     }
 
     @Test

@@ -4,14 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import racegame.model.Car;
 
-public class TrackMessage
-{
+public class StartMessage {
     @Getter @Setter
     private MessageType type;
     @Getter @Setter
-    private Car[] content;
+    private int content;
     @Getter @Setter
     private String sender;
-    @Getter @Setter
-    private int gameId;
 }

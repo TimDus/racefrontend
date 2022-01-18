@@ -5,6 +5,7 @@ public enum MessageType {
     DISCONNECT,
     CREATE,
     JOIN,
-    REFRESH
+    REFRESH,
+    START
 }
 

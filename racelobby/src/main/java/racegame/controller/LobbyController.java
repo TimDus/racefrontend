@@ -20,7 +20,7 @@ public class LobbyController {
 
     @MessageMapping("/lobby.createLobby")
     @SendTo("/topic/lobby")
-    public CreateMessage newUser(@Payload final CreateMessage createMessage, SimpMessageHeaderAccessor headerAccessor)
+    public CreateMessage NewLobby(@Payload final CreateMessage createMessage, SimpMessageHeaderAccessor headerAccessor)
     {
         headerAccessor.getSessionAttributes().put("username", createMessage.getSender());
         Lobby lobby = new Lobby();
@@ -34,7 +34,7 @@ public class LobbyController {
 
     @MessageMapping("/lobby.refreshLobby")
     @SendTo("/topic/lobby")
-    public LobbyMessage newUser(@Payload final LobbyMessage lobbyMessage)
+    public LobbyMessage RefreshLobby(@Payload final LobbyMessage lobbyMessage)
     {
         Lobby[] lobbyIds = new Lobby[lobbies.size()];
         for (int i = 0; i < lobbies.size(); i++)
@@ -48,10 +48,22 @@ public class LobbyController {
 
     @MessageMapping("/lobby.joinLobby")
     @SendTo("/topic/lobby")
-    public CreateMessage sendMove(@Payload final CreateMessage createMessage)
+    public CreateMessage JoinLobby(@Payload final CreateMessage createMessage)
     {
-        Lobby lobby = lobbies.get(Integer.parseInt(createMessage.getContent()));
+        Lobby lobby = lobbies.get(Integer.parseInt(createMessage.getContent())-1);
         lobby.JoinLobby(createMessage.getSender());
+        createMessage.setType(MessageType.JOIN);
+        return createMessage;
+    }
+
+    @MessageMapping("/lobby.startLobby")
+    @SendTo("/topic/lobby")
+    public CreateMessage StartLobby(@Payload final CreateMessage createMessage)
+    {
+        int number = Integer.parseInt(createMessage.getContent());
+        Lobby lobby = lobbies.get(Integer.parseInt(createMessage.getContent())-1);
+        lobby.JoinLobby(createMessage.getSender());
+        createMessage.setType(MessageType.START);
         return createMessage;
     }
 }

@@ -129,6 +129,24 @@ export const Lobby = () => {
       const lobbiesdata = document.getElementById("lobbies");
       lobbiesdata.classList.remove("hide");
     }
+    else if (message.type === "JOIN")
+    {
+      setLobbyId(message.content)
+      console.log(lobbyId)
+      global.stompClient.send(
+        "/app/lobby.startLobby",
+        {},
+        JSON.stringify({ sender: global.username, type: "START", content: lobbyId })
+      );
+    }
+    else if (message.type === "START")
+    {
+      if(lobbyId === message.content)
+      {
+        global.stompClient.unsubscribe("/topic/lobby")
+        history.push({pathname:"/racer", state: {detail: lobbyId}})
+      }
+    }
     else {}
 
     messageElement.innerHTML = message.content;
@@ -139,7 +157,6 @@ export const Lobby = () => {
         <nav>
           <h2>Welcome</h2> 
           <button onClick = {home}>Home</button>
-          <button onClick = {game}>Start game</button>
           <div id="status" className="login"></div>
           <div className="main row justify-content-center h-100">
               <form

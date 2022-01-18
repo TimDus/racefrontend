@@ -13,14 +13,18 @@ public class Track
     @Getter @Setter
     Car[] users = new Car[2];
 
+    @Getter @Setter
+    int id;
+
     public Track()
     {
         users[0] = new Car();
         users[1] = new Car();
     }
 
-    public void Newuser(String userName)
+    public void Newuser(String userName, int Id)
     {
+        id = Id;
         if(users[0].getUser().getUsername().equals(""))
         {
             users[0].getUser().setUsername(userName);

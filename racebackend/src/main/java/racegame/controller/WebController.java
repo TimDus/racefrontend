@@ -15,18 +15,20 @@ public class WebController {
     Track track = new Track();
 
     @MessageMapping("/race.newUser")
-    @SendTo("/race.userAdded")
-    public UserMessage newUser(@Payload final UserMessage userMessage, SimpMessageHeaderAccessor headerAccessor)
+    @SendTo("/topic/race")
+    public UserMessage newUser(@Payload final StartMessage startMessage, SimpMessageHeaderAccessor headerAccessor)
     {
-        headerAccessor.getSessionAttributes().put("username", userMessage.getSender());
-        track.Newuser(userMessage.getSender());
+        UserMessage userMessage = new UserMessage();
+        headerAccessor.getSessionAttributes().put("username", startMessage.getSender());
+        track.Newuser(startMessage.getSender(), startMessage.getContent());
         userMessage.setContent(track.getUsers());
-        System.out.println("direction: " + userMessage.getContent()[0]);
+        userMessage.setType(MessageType.CONNECT);
+        userMessage.setSender(userMessage.getSender());
         return userMessage;
     }
 
     @MessageMapping("/race.move")
-    @SendTo("/topic/public")
+    @SendTo("/topic/race")
     public TrackMessage sendMove(@Payload final MoveMessage moveMessage)
     {
         System.out.println("direction: " + moveMessage.getContent());
@@ -35,6 +37,7 @@ public class WebController {
         trackMessage.setContent(track.getUsers());
         trackMessage.setSender(moveMessage.getSender());
         trackMessage.setType((MessageType.TRACK));
+        trackMessage.setGameId(track.getId());
         return trackMessage;
     }
 }
